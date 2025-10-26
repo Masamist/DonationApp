@@ -24,19 +24,23 @@ const Search = (props) => {
         color='#25C0FF' 
         size={scaleFontSize(22)} />
       <TextInput 
+        placeholder='Error Here'
+        // placeholder={props.placeholder}
         ref={textInputRef} 
-        style={style.serchInput}
+        style={style.searchInput}
         value={search}
-        onCHangeText={(value) => handleSearch(value)} />
+        onChangeText={(value) => handleSearch(value)} />
     </Pressable>
   )
 };
 
 Search.defaultProps = {
-  onSearch: () => {}
+  placeholder: 'Search',///Error///////////////////
+  onSearch: () => {},
 }
 Search.propTypes = {
   onSearch: PropTypes.func,
+  placeholder: PropTypes.string,
 }
 
 export default Search;

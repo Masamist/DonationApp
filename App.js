@@ -1,8 +1,12 @@
 import React from 'react';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
 import {NavigationContainer} from '@react-navigation/native';
 import MainNavigation from './navigation/MainNavigation';
+import {Provider} from 'react-redux';
+import store from './redux/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor } from './redux/store';
 
 const App = () => {
   return (
@@ -24,9 +28,13 @@ const AppContent = () => {
         // paddingRight: insets.right,
       }}
     >
-      <NavigationContainer>
-        <MainNavigation />
-      </NavigationContainer>
+      <Provider store={store}>
+        <PersistGate persistor={persistor} loading={null}>
+          <NavigationContainer>
+            <MainNavigation />
+          </NavigationContainer>
+        </PersistGate>
+      </Provider>
     </View>
   )
 }

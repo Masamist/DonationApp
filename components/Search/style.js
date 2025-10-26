@@ -3,7 +3,7 @@ import {horizontalScale, scaleFontSize, verticalScale} from '../../assets/styles
 import { getFontFamily } from "../../assets/fonts/helper";
 
 const style = StyleSheet.create({
-  serchInput: {
+  searchInput: {
     flex: 1,
     marginLeft: horizontalScale(6),
     height:'100%',
