@@ -7,8 +7,9 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  registrationButton:{
-    alignItems: 'center',
+  backButton: {
+    marginLeft: horizontalScale(14),
+    marginTop: verticalScale(7),
   }
 });
 
