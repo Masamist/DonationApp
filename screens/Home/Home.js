@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {Routes} from '../../navigation/Routes';
 import { View, Text, ScrollView, Image, Pressable, FlatList } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -12,16 +13,26 @@ import SingleDonationItem from '../../components/SingleDonationItem/SingleDonati
 import style from './style';
 import globalStyle from '../../assets/styles/globalStyle';
 import { updateSelectedCategoryId } from '../../redux/reducers/Categories';
+import { updateSelectedDonationId } from '../../redux/reducers/Donations';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const categories = useSelector(state => state.categories)
+  const donations = useSelector(state => state.donations)
   const user = useSelector(state => state.user);
-  const dispach = useDispatch();
+  const dispatch = useDispatch();
 
+  const [donationItems, setDonationItems] = useState([]);
   const [categoryPage, setCategoryPage] = useState(1);
   const [categoryList, setCategoryList] = useState([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(false);
   const categoryPageSize = 4;
+
+  useEffect(() => {
+    const items = donations.items.filter(value =>
+      value.categoryIds.includes(categories.selectedCategoryId),
+    );
+    setDonationItems(items);
+  }, [categories.selectedCategoryId]);
 
   useEffect(() => {
     setIsLoadingCategories(true)
@@ -69,12 +80,16 @@ const Home = () => {
             onEndReached={() => {
               if(isLoadingCategories) return;
               setIsLoadingCategories(true)
-              let newData = pagination(categories.categories, categoryPage, categoryPageSize);
-              if(newData.length >0){
+              let newData = pagination(
+                categories.categories,
+                categoryPage,
+                categoryPageSize,
+              );
+              if (newData.length > 0) {
                 setCategoryList(prevState => [...prevState, ...newData]);
                 setCategoryPage(prevState => prevState + 1);
               }
-              setIsLoadingCategories(false)
+              setIsLoadingCategories(false);
             }}
             horizontal={true}
             showsHorizontalScrollIndicator={false}
@@ -83,13 +98,40 @@ const Home = () => {
               <View style={style.categoryItem} key={item.categoryId}>
                 <Tab
                   tabId={item.categoryId}
-                  onPress={(value) => dispach(updateSelectedCategoryId(value))}
+                  onPress={(value) => dispatch(updateSelectedCategoryId(value))}
                   title={item.name}
                   isInactive={item.categoryId !== categories.selectedCategoryId} />
               </View>
             )} 
           />
         </View>
+        {donationItems.length > 0 && 
+          <View style={style.donationItemsContainer}>
+            {donationItems.map(value => {
+              const categoryInformation = categories.categories.find(
+                val => val.categoryId === categories.selectedCategoryId,
+              )
+              return(
+                <View 
+                  key={value.donationItemId} 
+                  style={style.singleDonationItem}>
+                  <SingleDonationItem
+                    onPress={selectedDonationId => {
+                        dispatch(updateSelectedDonationId(selectedDonationId));
+                        navigation.navigate(Routes.SingleDonationItem, {
+                          categoryInformation,
+                        });
+                      }}
+                    donationItemId={value.donationItemId}
+                    uri={value.image}
+                    badgeTitle={categories.categories.filter(val => val.categoryId === categories.selectedCategoryId)[0].name}
+                    donationTitle={value.name}
+                    price={parseFloat(value.price)}
+                  />
+              </View>
+              )
+            })}
+        </View>}
       </ScrollView>
     </View>
   );
