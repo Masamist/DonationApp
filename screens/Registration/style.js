@@ -1,5 +1,7 @@
 import { StyleSheet } from "react-native";
-import { horizontalScale, verticalScale } from "../../assets/styles/scaling";
+import { horizontalScale, scaleFontSize, verticalScale } from "../../assets/styles/scaling";
+import { getFontFamily } from "../../assets/fonts/helper";
+
 
 const style = StyleSheet.create({
   container: {
@@ -10,6 +12,18 @@ const style = StyleSheet.create({
   backButton: {
     marginLeft: horizontalScale(14),
     marginTop: verticalScale(7),
+  },
+  error:{
+    fontFamily: getFontFamily('Inter_18pt', '400'),
+    fontSize: scaleFontSize(16),
+    color:'#FF0000',
+    marginBottom: verticalScale(24)
+  },
+  success: {
+    fontFamily: getFontFamily('Inter_18pt', '400'),
+    fontSize: scaleFontSize(16),
+    color:'#28A745',
+    marginBottom: verticalScale(24)
   }
 });
 

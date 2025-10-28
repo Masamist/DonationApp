@@ -6,14 +6,15 @@ import {useDispatch, useSelector} from 'react-redux';
 import Header from '../../components/Header/Header'
 import Button from '../../components/Button/Button';
 import Tab from '../../components/Tab/Tab';
-import Badge from '../../components/Badge/Badge';
 import Search from '../../components/Search/Search';
 import SingleDonationItem from '../../components/SingleDonationItem/SingleDonationItem';
+import { logOut } from '../../api/user';
 
 import style from './style';
 import globalStyle from '../../assets/styles/globalStyle';
 import { updateSelectedCategoryId } from '../../redux/reducers/Categories';
 import { updateSelectedDonationId } from '../../redux/reducers/Donations';
+import { resetToInitialState } from '../../redux/reducers/User';
 
 const Home = ({navigation}) => {
   const categories = useSelector(state => state.categories)
@@ -57,10 +58,22 @@ const Home = ({navigation}) => {
           <View>
             <Text style={style.headerIntroText}>Hello, </Text>
             <View style={style.userName}>
-              <Header title={user.firstName + ' ' +  user.lastName[0] + '.👋'} />
+              <Header title={user.displayName + '👋'} />
+            </View>
+            <View>
+              <Button onPress={() => navigation.navigate(Routes.FamilyFeed)} title={'Go to Family Feed'} />
             </View>
           </View>
-          <Image source={{uri: user.profileImage}} style={style.profileImage} resizeMode={'contain'} />
+          <View>
+            <Image source={{uri: user.profileImage}} style={style.profileImage} resizeMode={'contain'} />
+            <Pressable onPress={async() => {
+                dispatch(resetToInitialState());
+                await logOut();
+              }}>
+              <Header type={3} title={'Logout'} color={'#156CF7'} />
+            </Pressable>
+          </View>
+          
         </View>
         <View style={style.searchBox}>
           <Search />
